@@ -1,3 +1,5 @@
+import 'package:projet_final_appmobile/src/data/entities/todo_entity.dart';
+
 class CategorieEntity {
   final int id;
   final String nom;

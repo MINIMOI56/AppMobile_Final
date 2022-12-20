@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:projet_final_appmobile/src/components/custom_button.dart';
-import 'package:projet_final_appmobile/src/screens/ajout_categorie_screen.dart';
 import 'package:projet_final_appmobile/src/data/services/categorie_services.dart';
 import 'package:projet_final_appmobile/src/data/entities/categorie_entity.dart';
-import 'package:projet_final_appmobile/src/screens/todo_categorie_screen.dart';
+import 'package:projet_final_appmobile/src/data/services/todo_services.dart';
+import 'package:projet_final_appmobile/src/data/entities/todo_entity.dart';
+import 'package:projet_final_appmobile/src/screens/ajout_todo_screen.dart';
 
-class HomeCategorieScreen extends StatefulWidget {
-  HomeCategorieScreen({super.key});
+class TodoCategorieScreen extends StatefulWidget {
+  final int id;
+  final String nom;
 
-  final dbHelper = CategorieService();
+  TodoCategorieScreen({required CategorieEntity categorie})
+      : id = categorie.id,
+        nom = categorie.nom;
 
-  List<CategorieEntity> categories = [];
+        final dbHelperCategorie = CategorieService();
+
+  List<TodoEntity> todos = [];
 
   var listIndex;
 
+  final dbHelperTodo = TodoService();
+
   @override
-  _HomeCategorieScreenState createState() => _HomeCategorieScreenState();
+  _TodoCategorieScreenState createState() => _TodoCategorieScreenState();
 }
 
-class _HomeCategorieScreenState extends State<HomeCategorieScreen> {
+class _TodoCategorieScreenState extends State<TodoCategorieScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 50, 50, 50),
@@ -32,11 +40,7 @@ class _HomeCategorieScreenState extends State<HomeCategorieScreen> {
                   children: [
                     CustomButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddCategorieScreen()),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddTodoScreen(categorieid: widget.id)));
                         },
                         text: '+'),
                   ]))),
@@ -48,64 +52,56 @@ class _HomeCategorieScreenState extends State<HomeCategorieScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  const Padding(
-                      padding: EdgeInsets.only(
+                  Padding(
+                      padding: const EdgeInsets.only(
                           top: 20, left: 30, right: 30, bottom: 15),
                       child: Text(
-                        'Catégories',
-                        style: TextStyle(
+                        widget.nom,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 35,
                           fontWeight: FontWeight.w600,
                         ),
                       )),
                   const Padding(
-                      padding: EdgeInsets.only(left: 30, right: 30, bottom: 5),
+                      padding: EdgeInsets.only(
+                          top: 20, left: 30, right: 30, bottom: 15),
                       child: Text(
-                        'Ici ce trouve tout vos catégories',
+                        'Vos tâches',
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600),
+                          color: Colors.white,
+                          fontSize: 35,
+                          fontWeight: FontWeight.w600,
+                        ),
                       )),
-                  const Divider(
+                      const Divider(
                       color: Color.fromARGB(255, 70, 70, 70),
                       thickness: 3,
                       indent: 20,
                       endIndent: 20),
-                  Padding(
+                      Padding(
                     padding: const EdgeInsets.only(
                         top: 20, left: 30, right: 30, bottom: 15),
                     child: FutureBuilder(
-                        future: widget.dbHelper.getCategories(),
+                        future: widget.dbHelperTodo.getTodoByCategorieId(widget.id),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            widget.categories = snapshot.data!;
+                            widget.todos = snapshot.data!;
                           } else {
                             return const Text('Veuillez ajouter une catégorie',
                                 style: TextStyle(color: Colors.white));
                           }
                           return ListView.separated(
                               shrinkWrap: true,
-                              itemCount: widget.categories.length,
+                              itemCount: widget.todos.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return ListTile(
                                   tileColor: const Color.fromARGB(
                                       255, 70, 70, 70),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  TodoCategorieScreen(
-                                                      categorie: widget
-                                                          .categories[index])),
-                                        );
-                                      },
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10)
                                       ),
-                                  title: Text(widget.categories[index].nom,
+                                  title: Text(widget.todos[index].nom,
                                       style:
                                           const TextStyle(color: Colors.white)),
                                   trailing: IconButton(
@@ -113,11 +109,11 @@ class _HomeCategorieScreenState extends State<HomeCategorieScreen> {
                                           color: Colors.black),
                                       onPressed: () {
                                         setState(() {
-                                          widget.dbHelper
-                                              .deleteCategorie(
-                                                  widget.categories[index].id)
+                                          widget.dbHelperTodo
+                                              .deleteTodo(
+                                                  widget.todos[index].id)
                                               .then((value) {
-                                            widget.categories.removeAt(index);
+                                            widget.todos.removeAt(index);
                                           });
                                         });
                                       }),

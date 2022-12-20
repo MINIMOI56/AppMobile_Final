@@ -8,7 +8,7 @@ class CategorieService {
   Future<Database>? database;
   static const String databasePath = 'projet_final_appmobile.db';
   static const String tableCategorieName = 'Categorie';
-  ScoreService() {
+  CategorieService() {
     WidgetsFlutterBinding.ensureInitialized();
   }
 
@@ -27,13 +27,23 @@ class CategorieService {
   }
 
   Future<void> insertCategorie(CategorieEntity categorie) async {
-    // Get a reference to the database.
     final Database db = await getDatabaseInstance();
 
     await db.insert(
       tableCategorieName,
       categorie.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> updateCategorie(CategorieEntity categorie) async {
+    final db = await getDatabaseInstance();
+
+    await db.update(
+      tableCategorieName,
+      categorie.toMap(),
+      where: "id = ?",
+      whereArgs: [categorie.id],
     );
   }
 
