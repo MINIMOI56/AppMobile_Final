@@ -6,7 +6,7 @@ import 'package:projet_final_appmobile/src/data/entities/todo_entity.dart';
 
 class TodoService {
   Future<Database>? database;
-  static const String databasePath = 'projet_final_appmobile2.db';
+  static const String databasePath = 'projet_final_appmobile.db';
   static const String tableTodoName = 'Todo';
   TodoService() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +17,7 @@ class TodoService {
       join(await getDatabasesPath(), databasePath),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE IF NOT EXISTS $tableTodoName(id INTEGER PRIMARY KEY, categorieId INTEGER, nom VARCHAR(50), description VARCHAR(50))",
+          "CREATE TABLE IF NOT EXISTS $tableTodoName(id INTEGER PRIMARY KEY, categorieId INTEGER, nom VARCHAR(50), description VARCHAR(50), isDone BOOLEAN)",
         );
       },
       version: 2,
@@ -78,6 +78,16 @@ class TodoService {
       tableTodoName,
       where: "id = ?",
       whereArgs: [id],
+    );
+  }
+
+  Future<void> deleteTodoByCategoryId(int categorieId) async {
+    final db = await getDatabaseInstance();
+
+    await db.delete(
+      tableTodoName,
+      where: "categorieId = ?",
+      whereArgs: [categorieId],
     );
   }
 }

@@ -58,7 +58,7 @@ class _AddCategorieScreenState extends State<AddCategorieScreen> {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 50, 50, 50),
         body: Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
             child: SingleChildScrollView(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -128,7 +128,9 @@ class _AddCategorieScreenState extends State<AddCategorieScreen> {
                             onPressed: () {
                               _showIsCategorieExist();
                               print("Categorie ajoutée");
-                              Navigator.pop(context, {});
+                              Navigator.pop(context, {
+                                'categorie': widget.nomController.text,
+                              });
                             },
                             text: 'Ajouter')
                       ]))

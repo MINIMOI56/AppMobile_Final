@@ -6,7 +6,7 @@ import 'package:projet_final_appmobile/src/data/entities/categorie_entity.dart';
 
 class CategorieService {
   Future<Database>? database;
-  static const String databasePath = 'projet_final_appmobile.db';
+  static const String databasePath = 'projet_final_appmobile2.db';
   static const String tableCategorieName = 'Categorie';
   CategorieService() {
     WidgetsFlutterBinding.ensureInitialized();

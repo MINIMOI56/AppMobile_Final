@@ -44,7 +44,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       });
 
       TodoEntity todo = TodoEntity(
-          0, widget.categorieId , widget.nomController.text, widget.descriptionController.text);
+          0, widget.categorieId , widget.nomController.text, widget.descriptionController.text, 0);
 
       print('Todo: ' + todo.toString());
       print('categorieId: ' + widget.categorieId.toString());
@@ -70,7 +70,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 50, 50, 50),
         body: Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.only(top: 50, left: 5, right: 5),
             child: SingleChildScrollView(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -162,8 +162,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                         const Spacer(),
                         CustomButtonAjouter(
                             onPressed: () {
-                              _showIsTodoExist();
                               print("Todo ajoutée");
+                              setState(() {_showIsTodoExist();});
                               Navigator.pop(context, {});
                             },
                             text: 'Ajouter')
