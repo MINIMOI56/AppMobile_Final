@@ -1,5 +1,3 @@
-//Un message animé qui zoom et rétrécit en boucle
-
 import 'package:flutter/material.dart';
 
 class CustomMessage extends StatefulWidget {
